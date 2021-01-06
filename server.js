@@ -2,6 +2,8 @@ const morgan = require('morgan');
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
 require('express-async-errors');
 
 const upload = multer();
@@ -11,13 +13,23 @@ const app = express();
 const connectDB = require('./config/db');
 
 // initialize middleware
+app.use(cookieParser());
 app.use(cors());
-app.use(express.json({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
+// initialize passport for OAuth2
+app.use(passport.initialize());
+app.use(passport.session());
+require('./services/googleStrategy');
 
 // for parsing multipart/form-data
 app.use(upload.array());
 app.use(express.static('public'));
+
+// rutes for oAuth
+require('./routes/googleAuth')(app);
 
 // general routes
 app.use('/api/user', require('./routes/user'));

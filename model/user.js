@@ -2,18 +2,30 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  provider: String,
+  googleId: String,
+  googleEmail: {
+    type: String,
+    trim: true,
+  },
+  facebookId: String,
+  facebookEmail: {
+    type: String,
+    trim: true,
+  },
   name: {
     type: String,
     min: 3,
   },
   email: {
     type: String,
-    required: true,
   },
   password: {
     type: String,
-    required: true,
-    min: 6,
+  },
+  phone: {
+    type: Number,
+    trim: true,
   },
   isVerified: {
     type: Boolean,

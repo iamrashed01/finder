@@ -1,3 +1,4 @@
+const passport = require('passport');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const {
@@ -64,4 +65,6 @@ const verifyUser = async (req, res) => {
   });
 };
 
-module.exports = { createUser, verifyUser };
+module.exports = {
+  createUser, verifyUser,
+};

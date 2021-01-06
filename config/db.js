@@ -10,6 +10,7 @@ module.exports = () => {
     })
     .catch((ex) => {
       console.log('MongoDB server couldn\'t connected');
-      console.error(ex);
+      console.error(ex.message);
+      process.exit(1);
     });
 };
