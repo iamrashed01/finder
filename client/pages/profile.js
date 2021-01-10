@@ -10,7 +10,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     // redirect user to login if not authenticated
-    if (!loading && !user.data) Router.replace("/login");
+    if (!loading && !user) Router.replace("/login");
   }, [user, loading]);
 
   const logoutHandler = () => {

@@ -133,32 +133,18 @@ const verifyUser = async (req, res) => {
 };
 
 const authStatus = async (req, res) => {
-  const token = req.header("auth_token");
-  if (!token) {
-    return res
-      .status(401)
-      .json({ data: null, message: "please provide a valid token" });
-  }
+  const searchFor = req.user.provider ? "googleEmail" : "email";
+  const user = await User.findOne({ [searchFor]: req.user.email }).select(
+    "-createdAt -__v -_id -password"
+  );
 
-  let user;
-  try {
-    user = await jwt.verify(token, process.env.JWT_PRIVATE_KEY);
-  } catch {
-    if (!user) {
-      return res.status(401).json({ data: null, message: "invalid token" });
-    }
-  }
-
-  const isMatch = await User.findOne({ email: user.email });
-  if (!isMatch) {
+  if (!user) {
     return res.status(401).json({ data: null, message: "access denied!" });
   }
 
   return res.status(200).json({
-    data: {
-      ...user.payload.user,
-      auth_status: "in",
-    },
+    data: user,
+    auth_status: "in",
     success: true,
     messgae: "Authurization verifed",
   });

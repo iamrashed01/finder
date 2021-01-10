@@ -35,9 +35,12 @@ export default function LoginPage() {
 
     if (res.status === 200) {
       const userObj = await res.json();
+
+      console.log(userObj.data, "userObj");
       // set user to useSWR state
       mutate(userObj.data);
       Cookies.set("auth_token", userObj.auth_token);
+      Router.push("/");
     } else {
       setErrorMsg("Incorrect username or password. Try better!");
     }
@@ -46,7 +49,7 @@ export default function LoginPage() {
   useEffect(() => {
     console.log("login page called");
     // redirect to home if user is authenticated
-    if (!loading && user.data) Router.push("/");
+    if (!loading && user) Router.push("/");
   }, [user, loading]);
 
   return (
