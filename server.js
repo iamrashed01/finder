@@ -29,8 +29,7 @@ app.use(upload.array());
 app.use(express.static('public'));
 
 // rutes for oAuth
-require('./routes/googleAuth')(app);
-
+app.use('/auth/google', require('./routes/googleAuth'));
 // general routes
 app.use('/api/user', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
@@ -41,7 +40,6 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something failed.');
 });
 
-// set port
 const port = process.env.PORT || 5000;
 
 // app listener

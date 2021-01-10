@@ -1,8 +1,16 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const localRegisterValidation = (req) => {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+  });
+  return schema.validate(req);
+};
+
+const loginValidation = (req) => {
+  const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   });
@@ -20,4 +28,5 @@ const verificationValidation = (req) => {
 module.exports = {
   localRegisterValidation,
   verificationValidation,
+  loginValidation,
 };
