@@ -27,27 +27,29 @@ export default function LoginPage() {
       email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
     };
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
 
-    if (res.status === 200) {
-      const userObj = await res.json();
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-      console.log(userObj.data, "userObj");
-      // set user to useSWR state
-      mutate(userObj.data);
-      Cookies.set("auth_token", userObj.auth_token);
-      Router.push("/");
-    } else {
-      setErrorMsg("Incorrect username or password. Try better!");
+      if (res.status === 200) {
+        const userObj = await res.json();
+        // set user to useSWR state
+        mutate(userObj.data);
+        Cookies.set("auth_token", userObj.auth_token);
+        Router.push("/");
+      } else {
+        setErrorMsg("Incorrect username or password. Try better!");
+      }
+    } catch (error) {
+      setErrorMsg("Server error!");
     }
   }
 
   useEffect(() => {
-    console.log("login page called");
     // redirect to home if user is authenticated
     if (!loading && user) Router.push("/");
   }, [user, loading]);
@@ -80,14 +82,19 @@ export default function LoginPage() {
                       placeholder="password placeholder"
                     />
                   </FormGroup>
-                  <div className="submit">
+                  <div className="submit mb-3">
                     <Button type="submit" className="mr-3">
                       Login
                     </Button>
-                    <Link href="/signup">
-                      <a>I don't have an account</a>
-                    </Link>
+                    <Button color="primary">
+                      <a href="http://localhost:5000/auth/google">
+                        Singup with Google
+                      </a>
+                    </Button>
                   </div>
+                  <Link href="/signup">
+                    <a>I don't have an account</a>
+                  </Link>
                 </Form>
               </CardBody>
             </Card>

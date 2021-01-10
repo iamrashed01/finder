@@ -6,12 +6,9 @@ import { useUser } from "../lib/hooks";
 export default function HomePage() {
   const [user, { loading }] = useUser();
   useEffect(() => {
-    console.log("index page called");
     // redirect to login if user is not authenticated
     if (!loading && !user) Router.push("/login");
   }, [user, loading]);
-
-  console.log(loading, "user===dash");
 
   if (!user) return "Loading....";
 
