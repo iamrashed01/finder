@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useState } from "react";
 import {
   Button,
   Card,
@@ -13,33 +14,76 @@ import {
 } from "reactstrap";
 
 const Singup = () => {
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+  });
+
+  const changeHandler = ({ target: { name, value } }) => {
+    setState({ ...state, [name]: value });
+  };
   const onSubmit = (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", state.name);
+    formData.append("email", state.email);
+    formData.append("password", state.password);
+    formData.append("phone", state.phone);
   };
+
   return (
     <Container>
       <Row>
         <Col md={{ size: 6, offset: 3 }}>
-          <Card className="mt-5 text-center p-5">
+          <Card className="mt-5 p-5">
             <CardBody>
               <h1 className="mb-5 text-center">Login</h1>
               <Form onSubmit={onSubmit}>
                 <FormGroup>
-                  <Label for="exampleEmail">Email</Label>
+                  <Label for="name">Name</Label>
                   <Input
-                    type="email"
-                    name="email"
-                    id="exampleEmail"
-                    placeholder="with a placeholder"
+                    type="name"
+                    value={state.name}
+                    onChange={changeHandler}
+                    name="name"
+                    id="name"
+                    placeholder="Name"
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="examplePassword">Password</Label>
+                  <Label for="email">Email</Label>
+                  <Input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={state.email}
+                    onChange={changeHandler}
+                    placeholder="Email"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="password">Password</Label>
                   <Input
                     type="password"
                     name="password"
+                    value={state.password}
+                    onChange={changeHandler}
                     id="examplePassword"
-                    placeholder="password placeholder"
+                    placeholder="password"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="phone">Phone</Label>
+                  <Input
+                    type="phone"
+                    name="phone"
+                    value={state.phone}
+                    onChange={changeHandler}
+                    id="phone"
+                    placeholder="phone"
                   />
                 </FormGroup>
                 <div className="submit mb-3">

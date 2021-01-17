@@ -12,6 +12,7 @@
     "linebreak-style": ["error", "windows"],
     "func-names": "off",
     "no-console": "off",
-    "quotes": "off"
+    "quotes": "off",
+    "import/prefer-default-export": "off"
   }
 }

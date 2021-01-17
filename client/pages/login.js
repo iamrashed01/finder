@@ -88,7 +88,7 @@ export default function LoginPage() {
                     </Button>
                     <Button color="primary">
                       <a href="http://localhost:5000/auth/google">
-                        Singup with Google
+                        Singin with Google
                       </a>
                     </Button>
                   </div>
