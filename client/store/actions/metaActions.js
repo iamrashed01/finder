@@ -1,4 +1,7 @@
+import { toast } from 'react-toastify';
 import * as types from "./types";
+import { postRequest } from '../../utils/request';
+import { LOGIN } from '../../utils/urls';
 
 export const loader = () => (dispatch) => {
   dispatch({
@@ -8,5 +11,12 @@ export const loader = () => (dispatch) => {
 
 export const loginAction = (data) => () => {
   console.log(data, "form data");
+  postRequest(LOGIN, data)
+    .then((res) => {
+      console.log(res);
+      toast.success(res.data.message);
+    })
+    .catch((error) => toast.error(error.response.data.message));
+
   loader();
 };

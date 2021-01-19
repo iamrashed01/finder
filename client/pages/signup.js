@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import {
   Button,
   Card,
@@ -12,8 +12,10 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { connect } from 'react-redux';
+import { loginAction } from '../store/actions/metaActions';
 
-const Singup = () => {
+const Singup = (props) => {
   const [state, setState] = useState({
     name: "",
     email: "",
@@ -32,6 +34,11 @@ const Singup = () => {
     formData.append("email", state.email);
     formData.append("password", state.password);
     formData.append("phone", state.phone);
+
+    console.log(process.env.BASE_URL, 'BASE_URL');
+    console.log(state);
+
+    props.loginAction(formData);
   };
 
   return (
@@ -108,4 +115,4 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default connect(null, { loginAction })(Singup);
