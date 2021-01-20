@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const {
@@ -21,8 +20,12 @@ const createUser = async (req, res) => {
     sendMail(user.email, code);
     user.verificationCode = await bcrypt.hash(code.toString(), salt);
     await user.save();
-    return res.status(400).json({
-      success: false,
+    return res.status(200).json({
+      data: {
+        email_status: 0,
+        user: null,
+      },
+      success: true,
       message:
         "user already registered Please check you email to verify your account",
     });
@@ -44,7 +47,11 @@ const createUser = async (req, res) => {
   await user.save();
 
   return res.status(200).json({
-    data: user.email,
+    data: {
+      email_status: 0,
+      email: user.email,
+      user: null,
+    },
     message: "Please check your email to verify account",
   });
 };
@@ -67,7 +74,14 @@ const loginUser = async (req, res) => {
     sendMail(user.email, code);
     user.verificationCode = await bcrypt.hash(code.toString(), salt);
     await user.save();
-    return res.status(400).json({
+    const token = user.generateAuthToken();
+    return res.status(200).json({
+      data: {
+        email_status: 0,
+        email: user.email,
+        user: null,
+      },
+      auth_token: token,
       success: false,
       message:
         "user already registered Please check you email to verify your account",
@@ -76,7 +90,7 @@ const loginUser = async (req, res) => {
 
   const isPasswordMatch = await bcrypt.compare(
     req.body.password,
-    user.password
+    user.password,
   );
 
   if (!isPasswordMatch) {
@@ -112,7 +126,7 @@ const verifyUser = async (req, res) => {
 
   const isMatch = await bcrypt.compare(
     req.body.code.toString(),
-    user.verificationCode
+    user.verificationCode,
   );
   if (!isMatch) {
     return res.status(400).json({ success: false, message: "Invalid Code" });
@@ -135,7 +149,7 @@ const verifyUser = async (req, res) => {
 const authStatus = async (req, res) => {
   const searchFor = req.user.provider ? "googleEmail" : "email";
   const user = await User.findOne({ [searchFor]: req.user.email }).select(
-    "-createdAt -__v -_id -password"
+    "-createdAt -__v -_id -password",
   );
 
   if (!user) {

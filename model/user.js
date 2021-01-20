@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.methods.generateAuthToken = function () {
@@ -47,7 +47,7 @@ userSchema.methods.generateAuthToken = function () {
       email: this.email,
     },
     process.env.JWT_PRIVATE_KEY,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
   return token;
 };
