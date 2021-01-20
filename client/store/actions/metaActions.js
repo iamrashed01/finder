@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import * as types from "./types";
+import * as types from './types';
 import { postRequest } from '../../utils/request';
 import { LOGIN } from '../../utils/urls';
 
@@ -10,7 +10,6 @@ export const loader = () => (dispatch) => {
 };
 
 export const loginAction = (data) => () => {
-  console.log(data, "form data");
   postRequest(LOGIN, data)
     .then((res) => {
       console.log(res);

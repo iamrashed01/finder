@@ -1,28 +1,25 @@
-import { useEffect } from "react";
-import Link from "next/link";
-import Router from "next/router";
-import { useUser } from "../lib/hooks";
+import Link from 'next/link';
+import { useUser } from '../lib/hooks';
+import Layout from '../components/Layout';
 
 export default function HomePage() {
-  const [user, { loading }] = useUser();
-  useEffect(() => {
-    // redirect to login if user is not authenticated
-    if (!loading && !user) Router.push("/login");
-  }, [user, loading]);
+  const [user] = useUser();
 
-  if (!user) return "Loading....";
-
-  const email = user.email || user.googleEmail;
   return (
-    <>
+    <Layout>
       <h1>
         <Link href="/profile">
           <a>Profile</a>
         </Link>
       </h1>
-      <h2>{email}</h2>
-      <h5>{user.name}</h5>
-      <style jsx>{`
+      {user && (
+        <>
+          <h2>{user.email || user.googleEmail}</h2>
+          <h5>{user.name}</h5>
+        </>
+      )}
+      <style jsx>
+        {`
         li {
           margin-bottom: 0.5rem;
         }
@@ -30,7 +27,8 @@ export default function HomePage() {
           white-space: pre-wrap;
           word-wrap: break-word;
         }
-      `}</style>
-    </>
+      `}
+      </style>
+    </Layout>
   );
 }

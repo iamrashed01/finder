@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 import {
   Button,
   Card,
@@ -11,16 +11,16 @@ import {
   Input,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap';
 import { connect } from 'react-redux';
 import { loginAction } from '../store/actions/metaActions';
 
 const Singup = (props) => {
   const [state, setState] = useState({
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
   });
 
   const changeHandler = ({ target: { name, value } }) => {
@@ -30,10 +30,10 @@ const Singup = (props) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", state.name);
-    formData.append("email", state.email);
-    formData.append("password", state.password);
-    formData.append("phone", state.phone);
+    formData.append('name', state.name);
+    formData.append('email', state.email);
+    formData.append('password', state.password);
+    formData.append('phone', state.phone);
 
     console.log(process.env.BASE_URL, 'BASE_URL');
     console.log(state);

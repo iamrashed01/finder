@@ -1,21 +1,23 @@
 {
   "env": {
     "browser": true,
-    "commonjs": true,
     "es2021": true
   },
-  "extends": ["airbnb-base"],
+  "extends": ["plugin:react/recommended", "airbnb"],
   "parserOptions": {
-    "ecmaVersion": 12,
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
+  "plugins": ["react"],
   "rules": {
     "linebreak-style": ["error", "windows"],
     "func-names": "off",
     "no-console": "off",
-    "quotes": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/prefer-default-export": "off"
   }
 }

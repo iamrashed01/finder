@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import Router from "next/router";
-import Link from "next/link";
-import { useUser } from "../lib/hooks";
-import Cookies from "js-cookie";
+import { useState } from 'react';
+import Router from 'next/router';
+import Link from 'next/link';
+import Cookies from 'js-cookie';
 import {
   Container,
   Row,
@@ -14,11 +13,13 @@ import {
   FormGroup,
   Label,
   Input,
-} from "reactstrap";
+} from 'reactstrap';
+import PublicLayout from '../components/PublicLayout';
+import { useUser } from '../lib/hooks';
 
 export default function LoginPage() {
-  const [user, { mutate, loading }] = useUser();
-  const [errorMsg, setErrorMsg] = useState("");
+  const [user, { mutate }] = useUser();
+  const [errorMsg, setErrorMsg] = useState('');
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -29,9 +30,9 @@ export default function LoginPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
 
@@ -39,23 +40,18 @@ export default function LoginPage() {
         const userObj = await res.json();
         // set user to useSWR state
         mutate(userObj.data);
-        Cookies.set("auth_token", userObj.auth_token);
-        Router.push("/");
+        Cookies.set('auth_token', userObj.auth_token);
+        Router.push('/');
       } else {
-        setErrorMsg("Incorrect username or password. Try better!");
+        setErrorMsg('Incorrect username or password. Try better!');
       }
     } catch (error) {
-      setErrorMsg("Server error!");
+      setErrorMsg('Server error!');
     }
   }
 
-  useEffect(() => {
-    // redirect to home if user is authenticated
-    if (!loading && user) Router.push("/");
-  }, [user, loading]);
-
   return (
-    <>
+    <PublicLayout>
       <Container>
         <Row>
           <Col md={{ size: 6, offset: 3 }}>
@@ -101,6 +97,6 @@ export default function LoginPage() {
           </Col>
         </Row>
       </Container>
-    </>
+    </PublicLayout>
   );
 }

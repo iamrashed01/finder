@@ -10,20 +10,21 @@ export const getToken = () => {
 };
 
 export const postRequest = (url, params, query = null) => {
-  let mainUrl;
+  let rootUrl;
   if (query) {
-    mainUrl = url.relativeUrl + query;
+    rootUrl = process.env.BASE_URL + url.relativeUrl + query;
   } else {
-    mainUrl = url.relativeUrl;
+    rootUrl = process.env.BASE_URL + url.relativeUrl;
   }
 
   const headers = {
     auth_token: getToken(),
+    Accept: 'application/json',
   };
 
   return axios({
     method: url.method,
-    url: process.env.BASE_URL + mainUrl,
+    url: rootUrl,
     data: params,
     headers,
   });

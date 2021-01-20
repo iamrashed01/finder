@@ -25,3 +25,16 @@ a {
 .btn a {
   color: #ffffff !important;
 }
+
+.loading {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 9999;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
