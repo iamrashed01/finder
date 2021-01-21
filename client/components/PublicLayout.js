@@ -9,7 +9,7 @@ const PublicLayout = ({ children }) => {
   useEffect(() => {
     if (!loading && user) {
       if (user.isVerified) {
-        return Router.push('/');
+        return Router.push('/profile');
       }
       if (!user.isVerified) {
         return Router.push('/email-verify');

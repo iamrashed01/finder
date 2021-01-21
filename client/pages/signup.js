@@ -13,7 +13,7 @@ import {
   Col,
 } from 'reactstrap';
 import { connect } from 'react-redux';
-import { loginAction } from '../store/actions/metaActions';
+import { registerAction } from '../store/actions/metaActions';
 
 const Singup = (props) => {
   const [state, setState] = useState({
@@ -35,10 +35,7 @@ const Singup = (props) => {
     formData.append('password', state.password);
     formData.append('phone', state.phone);
 
-    console.log(process.env.BASE_URL, 'BASE_URL');
-    console.log(state);
-
-    props.loginAction(formData);
+    props.registerAction(formData);
   };
 
   return (
@@ -115,4 +112,4 @@ const Singup = (props) => {
   );
 };
 
-export default connect(null, { loginAction })(Singup);
+export default connect(null, { registerAction })(Singup);

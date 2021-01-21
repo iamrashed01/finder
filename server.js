@@ -1,3 +1,4 @@
+const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const express = require('express');
 const cors = require('cors');
@@ -13,6 +14,32 @@ const app = express();
 const connectDB = require('./config/db');
 
 // initialize middleware
+const loginLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 20, // start blocking after 5 requests
+  statusCode: 200,
+  message: {
+    status: 429, // optional, of course
+    limiter: true,
+    type: 'error',
+    message: 'Too many login attemped from this IP, please try again after an hour',
+  },
+});
+const createLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 2, // start blocking after 5 requests
+  statusCode: 200,
+  message: {
+    status: 429, // optional, of course
+    limiter: true,
+    type: 'error',
+    message: 'Too many accounts created from this IP, please try again after an hour',
+  },
+});
+
+//  apply to all requests
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/auth/register', createLimiter);
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());

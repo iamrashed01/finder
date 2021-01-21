@@ -9,7 +9,6 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        console.log(!user, '!user!user!user');
         return Router.push('/login');
       }
       if (!user.isVerified) {

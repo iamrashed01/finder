@@ -1,4 +1,4 @@
-export const LOGIN = {
+export const REGISTER = {
   relativeUrl: 'auth/register',
   method: 'POST',
 };

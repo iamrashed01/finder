@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import {
   Container,
   Row,
@@ -19,7 +19,6 @@ import { useUser } from '../lib/hooks';
 
 export default function LoginPage() {
   const [user, { mutate }] = useUser();
-  const [errorMsg, setErrorMsg] = useState('');
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -36,17 +35,17 @@ export default function LoginPage() {
         body: JSON.stringify(body),
       });
 
+      const userObj =  await res.json();
       if (res.status === 200) {
-        const userObj = await res.json();
         // set user to useSWR state
         mutate(userObj.data);
         Cookies.set('auth_token', userObj.auth_token);
-        Router.push('/');
+        Router.push('/profile');
       } else {
-        setErrorMsg('Incorrect username or password. Try better!');
+        toast.error(userObj.message)
       }
     } catch (error) {
-      setErrorMsg('Server error!');
+      toast.error('Server error!')
     }
   }
 
@@ -58,7 +57,6 @@ export default function LoginPage() {
             <Card className="mt-5 p-5">
               <CardBody>
                 <h1 className="mb-5 text-center">Login</h1>
-                {errorMsg && <p className="error">{errorMsg}</p>}
                 <Form onSubmit={onSubmit}>
                   <FormGroup>
                     <Label for="exampleEmail">Email</Label>

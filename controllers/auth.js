@@ -70,6 +70,17 @@ const loginUser = async (req, res) => {
       .json({ success: false, message: "username or password wrong!" });
   }
 
+  const isPasswordMatch = await bcrypt.compare(
+    req.body.password,
+    user.password,
+  );
+
+  if (!isPasswordMatch) {
+    return res
+      .status(401)
+      .json({ success: false, message: "username or password wrong!" });
+  }
+
   if (user && !user.isVerified) {
     sendMail(user.email, code);
     user.verificationCode = await bcrypt.hash(code.toString(), salt);
@@ -86,17 +97,6 @@ const loginUser = async (req, res) => {
       message:
         "user already registered Please check you email to verify your account",
     });
-  }
-
-  const isPasswordMatch = await bcrypt.compare(
-    req.body.password,
-    user.password,
-  );
-
-  if (!isPasswordMatch) {
-    return res
-      .status(401)
-      .json({ success: false, message: "username or password wrong!" });
   }
 
   const token = user.generateAuthToken();

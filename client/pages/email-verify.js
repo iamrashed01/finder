@@ -1,19 +1,27 @@
-import { useState } from 'react';
-import Router from 'next/router';
+import { useState } from "react";
+import Router from "next/router";
 import {
-  Button, Card, CardBody, Container, Form, FormGroup, Label, Input, Row, Col,
-} from 'reactstrap';
-import { connect } from 'react-redux';
-import Cookies from 'js-cookie';
-import { useUser } from '../lib/hooks';
-import PublicLayout from '../components/PublicLayout';
-import { } from '../store/actions/metaActions';
+  Button,
+  Card,
+  CardBody,
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Row,
+  Col,
+} from "reactstrap";
+import { connect } from "react-redux";
+import Cookies from "js-cookie";
+import PublicLayout from "../components/PublicLayout";
+import { verifyEmailAction } from "../store/actions/metaActions";
+import { version } from "joi";
 
-const EmailVerify = () => {
-  const [user, { mutate }] = useUser();
+const EmailVerify = (props) => {
   const [state, setState] = useState({
-    code: '',
-    email: '',
+    code: "",
+    email: "",
   });
 
   const changeHandler = ({ target: { name, value } }) => {
@@ -23,17 +31,14 @@ const EmailVerify = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('code', state.code);
-    formData.append('email', state.email);
-
-    console.log(process.env.BASE_URL, 'BASE_URL');
-    console.log(state);
+    formData.append("code", state.code);
+    formData.append("email", state.email);
+    props.verifyEmailAction(formData);
   };
 
   const logoutHandler = () => {
-    Cookies.remove('auth_token');
-    mutate(null);
-    Router.replace('/login');
+    Cookies.remove("auth_token");
+    Router.replace("/login");
   };
 
   return (
@@ -71,7 +76,9 @@ const EmailVerify = () => {
                     <Button type="submit" color="primary" className="mr-3 px-4">
                       Verify
                     </Button>
-                    <Button color="danger" onClick={logoutHandler}>Logout</Button>
+                    <Button color="danger" onClick={logoutHandler}>
+                      Logout
+                    </Button>
                   </div>
                 </Form>
               </CardBody>
@@ -83,4 +90,4 @@ const EmailVerify = () => {
   );
 };
 
-export default connect(null, { })(EmailVerify);
+export default connect(null, { verifyEmailAction })(EmailVerify);
