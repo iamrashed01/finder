@@ -1,12 +1,12 @@
-const bcrypt = require("bcrypt");
-const _ = require("lodash");
+const bcrypt = require('bcrypt');
+const _ = require('lodash');
 const {
   localRegisterValidation,
   verificationValidation,
   loginValidation,
-} = require("../validator/auth");
-const User = require("../model/user");
-const sendMail = require("../utils/sendMail");
+} = require('../validator/auth');
+const User = require('../model/user');
+const sendMail = require('../utils/sendMail');
 
 const createUser = async (req, res) => {
   const { error } = localRegisterValidation(req.body);
@@ -27,17 +27,17 @@ const createUser = async (req, res) => {
       },
       success: true,
       message:
-        "user already registered Please check you email to verify your account",
+        'user already registered Please check you email to verify your account',
     });
   }
 
   if (user) {
     return res
       .status(400)
-      .json({ success: false, message: "user already registered" });
+      .json({ success: false, message: 'user already registered' });
   }
 
-  user = await new User(_.pick(req.body, ["name", "email", "password"]));
+  user = await new User(_.pick(req.body, ['name', 'email', 'password']));
   user.password = await bcrypt.hash(user.password, salt);
 
   user.verificationCode = await bcrypt.hash(code.toString(), salt);
@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
       email: user.email,
       user: null,
     },
-    message: "Please check your email to verify account",
+    message: 'Please check your email to verify account',
   });
 };
 
@@ -67,7 +67,7 @@ const loginUser = async (req, res) => {
   if (!user) {
     return res
       .status(401)
-      .json({ success: false, message: "username or password wrong!" });
+      .json({ success: false, message: 'username or password wrong!' });
   }
 
   const isPasswordMatch = await bcrypt.compare(
@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
   if (!isPasswordMatch) {
     return res
       .status(401)
-      .json({ success: false, message: "username or password wrong!" });
+      .json({ success: false, message: 'username or password wrong!' });
   }
 
   if (user && !user.isVerified) {
@@ -95,7 +95,7 @@ const loginUser = async (req, res) => {
       auth_token: token,
       success: false,
       message:
-        "user already registered Please check you email to verify your account",
+        'user already registered Please check you email to verify your account',
     });
   }
 
@@ -103,7 +103,7 @@ const loginUser = async (req, res) => {
 
   return res
     .status(200)
-    .json({ data: user, auth_token: token, message: "successfully loged in" });
+    .json({ data: user, auth_token: token, message: 'successfully loged in' });
 };
 
 const verifyUser = async (req, res) => {
@@ -114,14 +114,14 @@ const verifyUser = async (req, res) => {
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "Verification failed due to wrong information",
+      message: 'Verification failed due to wrong information',
     });
   }
 
   if (user.isVerified) {
     return res
       .status(400)
-      .json({ success: false, message: "User Already verified" });
+      .json({ success: false, message: 'User Already verified' });
   }
 
   const isMatch = await bcrypt.compare(
@@ -129,7 +129,7 @@ const verifyUser = async (req, res) => {
     user.verificationCode,
   );
   if (!isMatch) {
-    return res.status(400).json({ success: false, message: "Invalid Code" });
+    return res.status(400).json({ success: false, message: 'Invalid Code' });
   }
 
   const token = user.generateAuthToken();
@@ -138,29 +138,44 @@ const verifyUser = async (req, res) => {
   user.isVerified = true;
   await user.save();
 
-  return res.header("x-auth-token", token).status(200).json({
+  return res.header('x-auth-token', token).status(200).json({
     success: true,
     email: user.email,
     isVerified: user.isVerified,
-    message: "User successfully verified",
+    message: 'User successfully verified',
   });
 };
 
 const authStatus = async (req, res) => {
-  const searchFor = req.user.provider ? "googleEmail" : "email";
-  const user = await User.findOne({ [searchFor]: req.user.email }).select(
-    "-createdAt -__v -_id -password",
+  const provider = { google: 'googleId', facebook: 'googleId', email: 'email' };
+  const reqProvider = { google: 'id', facebook: 'id', email: 'email' };
+  const searchFor = req.user.provider || 'email';
+
+  const serviceId = provider[searchFor];
+  const reqId = reqProvider[searchFor];
+
+  console.log(reqId, 'reqId');
+  console.log(req.user[reqId], 'req.user[reqId]');
+  console.log(serviceId, 'serviceId');
+
+  if (!req.user[reqId]) {
+    return res.status(401).json({ data: null, message: 'wrong credential' });
+  }
+  const user = await User.findOne({ [serviceId]: req.user[reqId] }).select(
+    '-createdAt -__v -_id -password',
   );
 
+  console.log(user, 'user==========');
+
   if (!user) {
-    return res.status(401).json({ data: null, message: "access denied!" });
+    return res.status(401).json({ data: null, message: 'access denied!' });
   }
 
   return res.status(200).json({
     data: user,
-    auth_status: "in",
+    auth_status: 'in',
     success: true,
-    messgae: "Authurization verifed",
+    messgae: 'Authurization verifed',
   });
 };
 

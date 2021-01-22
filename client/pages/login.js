@@ -76,13 +76,18 @@ export default function LoginPage() {
                       placeholder="password placeholder"
                     />
                   </FormGroup>
-                  <div className="submit mb-3">
-                    <Button type="submit" className="mr-3">
-                      Login
-                    </Button>
-                    <Button color="primary">
+                  <Button type="submit" className="mr-3 mb-2">
+                    Login
+                  </Button>
+                  <div className="submit mb-3 d-flex">
+                    <Button color="danger" className="mr-3">
                       <a href="http://localhost:5000/auth/google">
                         Singin with Google
+                      </a>
+                    </Button>
+                    <Button color="primary">
+                      <a href="http://localhost:5000/auth/facebook">
+                        Singin with Facebook
                       </a>
                     </Button>
                   </div>

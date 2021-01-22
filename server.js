@@ -50,6 +50,7 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./services/googleStrategy');
+require('./services/facebookStrategy');
 
 // for parsing multipart/form-data
 app.use(upload.array());
@@ -57,6 +58,7 @@ app.use(express.static('public'));
 
 // rutes for oAuth
 app.use('/auth/google', require('./routes/googleAuth'));
+app.use('/auth/facebook', require('./routes/facebookAuth'));
 // general routes
 app.use('/api/user', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
